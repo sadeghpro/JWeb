@@ -3,9 +3,9 @@
 **JWeb** is a Java library for connecting to Http servers and fetch html or json data.
 
 
-##Getting start
+## Getting start
 
-###Maven
+### Maven
 Add jitpack to maven repositories:
 ```
 <repositories>
