@@ -1,6 +1,45 @@
-# JWeb: Java Http Connection
+# JWeb: Java Http Connection [![](https://www.jitpack.io/v/sadeghpro/jweb.svg)](https://www.jitpack.io/#sadeghpro/jweb)
 
 **JWeb** is a Java library for connecting to Http servers and fetch html or json data.
+
+
+##Getting start
+
+###Maven
+Add jitpack to maven repositories:
+```
+<repositories>
+	<repository>
+	    <id>jitpack.io</id>
+	    <url>https://www.jitpack.io</url>
+	</repository>
+</repositories>
+```
+Add the dependency:
+```
+<dependency>
+    <groupId>com.github.sadeghpro</groupId>
+    <artifactId>jweb</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+### Gradle
+Add this in your root build.gradle at the end of repositories:
+```
+allprojects {
+	repositories {
+		...
+		maven { url 'https://www.jitpack.io' }
+	}
+}
+```
+and then in dependencies:
+```
+dependencies {
+    implementation 'com.github.sadeghpro:jweb:0.1.0'
+}
+```
+
 
 ## Example
 Fetch the [Wikipedia](https://en.wikipedia.org/wiki/Main_Page) homepage:
