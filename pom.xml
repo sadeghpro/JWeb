@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ir.sadeghpro</groupId>
+    <artifactId>jweb</artifactId>
+    <version>0.1.0</version>
+
+    <name>Java Http Connection</name>
+    <description>JWeb is a Java library for connecting to Http servers and fetch html or json data.</description>
+    <url>https://github.com/sadeghpro/JWeb</url>
+
+
+    <developers>
+        <developer>
+            <name>sadegh mohammadnia</name>
+            <email>sadeghmohamadnia@yahoo.com</email>
+            <organization>com.github.sadeghpro</organization>
+            <organizationUrl>https://github.com/sadeghpro/JWeb</organizationUrl>
+        </developer>
+    </developers>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
