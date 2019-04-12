@@ -2,6 +2,7 @@ package ir.sadeghpro.web;
 
 import com.google.gson.Gson;
 
+import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -96,8 +97,14 @@ public class Connection {
 
         int responseCode = con.getResponseCode();
 
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
+        InputStream stream;
+        if (responseCode >= HttpURLConnection.HTTP_BAD_REQUEST) {
+            con.connect();
+            stream = con.getErrorStream();
+        } else {
+            stream = con.getInputStream();
+        }
+        BufferedReader in = new BufferedReader(new InputStreamReader(stream));
         String inputLine;
         StringBuilder response = new StringBuilder();
 
