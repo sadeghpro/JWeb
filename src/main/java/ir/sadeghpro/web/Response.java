@@ -1,5 +1,7 @@
 package ir.sadeghpro.web;
 
+import com.google.gson.Gson;
+
 public class Response {
 
     private int statusCode;
@@ -24,5 +26,9 @@ public class Response {
 
     public void setBody(String body) {
         this.body = body;
+    }
+
+    public <T> T deserializeJsonBody(Class<T> type){
+        return new Gson().fromJson(body,type);
     }
 }

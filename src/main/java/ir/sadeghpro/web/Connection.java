@@ -1,5 +1,7 @@
 package ir.sadeghpro.web;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -71,6 +73,11 @@ public class Connection {
         return this;
     }
 
+    public <T> Connection setJsonBody(T object) {
+        this.body = new Gson().toJson(object);
+        return this;
+    }
+
     public Response exec() throws IOException {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod(method.toString());
@@ -79,7 +86,7 @@ public class Connection {
         headers.putAll(this.headers);
         headers.forEach(con::setRequestProperty);
 
-        if (body != null && !body.isEmpty()){
+        if (body != null && !body.isEmpty()) {
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             wr.writeBytes(body);

@@ -6,7 +6,7 @@
 
     <groupId>ir.sadeghpro</groupId>
     <artifactId>jweb</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 
     <name>Java Http Connection</name>
     <description>JWeb is a Java library for connecting to Http servers and fetch html or json data.</description>
@@ -16,11 +16,20 @@
     <developers>
         <developer>
             <name>sadegh mohammadnia</name>
-            <email>sadeghmohamadnia@yahoo.com</email>
+            <email>sadeghpro91@gmail.com</email>
             <organization>com.github.sadeghpro</organization>
             <organizationUrl>https://github.com/sadeghpro/JWeb</organizationUrl>
         </developer>
     </developers>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+        </dependency>
+    </dependencies>
 
 
     <build>
