@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,7 +91,7 @@ public class Connection {
         if (body != null && !body.isEmpty()) {
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.writeBytes(body);
+            wr.write(body.getBytes(StandardCharsets.UTF_8));
             wr.flush();
             wr.close();
         }
