@@ -8,6 +8,7 @@ import java.util.Map;
 public class JWeb {
 
     private static Map<String, String> defaultHeaders = new HashMap<>();
+    private static String defaultUrl = "";
 
 
     public static Map<String, String> getDefaultHeaders() {
@@ -18,8 +19,16 @@ public class JWeb {
         JWeb.defaultHeaders = defaultHeaders;
     }
 
+    public static String getDefaultUrl() {
+        return defaultUrl;
+    }
+
+    public static void setDefaultUrl(String defaultUrl) {
+        JWeb.defaultUrl = defaultUrl;
+    }
+
     public static Connection connect(String url) throws MalformedURLException {
-        return new Connection(url);
+        return new Connection(defaultUrl + url);
     }
 
     public static Connection connect(URL url) {

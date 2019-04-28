@@ -1,6 +1,10 @@
 package ir.sadeghpro.web;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class Response {
 
@@ -28,7 +32,11 @@ public class Response {
         this.body = body;
     }
 
-    public <T> T deserializeJsonBody(Class<T> type){
+    public <T> T deserializeJsonObject(Class<T> type){
         return new Gson().fromJson(body,type);
+    }
+    public <T> List<T> deserializeJsonArray(Class<T> type){
+        Type arrayType = TypeToken.getParameterized(List.class, type).getType();
+        return new Gson().fromJson(body,arrayType);
     }
 }
