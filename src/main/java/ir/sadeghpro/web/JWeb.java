@@ -9,6 +9,7 @@ public class JWeb {
 
     private static Map<String, String> defaultHeaders = new HashMap<>();
     private static String defaultUrl = "";
+    private static int timeout = 0;
 
 
     public static Map<String, String> getDefaultHeaders() {
@@ -25,6 +26,14 @@ public class JWeb {
 
     public static void setDefaultUrl(String defaultUrl) {
         JWeb.defaultUrl = defaultUrl;
+    }
+
+    public static int getTimeout() {
+        return timeout;
+    }
+
+    public static void setTimeout(int timeout) {
+        JWeb.timeout = timeout;
     }
 
     public static Connection connect(String url) throws MalformedURLException {

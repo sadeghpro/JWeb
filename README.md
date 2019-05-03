@@ -6,7 +6,7 @@
 ## Getting start
 
 ### Maven
-Add jitpack to maven repositories:
+Add JitPack to maven repositories:
 ```
 <repositories>
 	<repository>
@@ -20,7 +20,7 @@ Add the dependency:
 <dependency>
     <groupId>com.github.sadeghpro</groupId>
     <artifactId>jweb</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
 </dependency>
 ```
 ### Gradle
@@ -36,7 +36,7 @@ allprojects {
 and then in dependencies:
 ```
 dependencies {
-    implementation 'com.github.sadeghpro:jweb:0.3.0'
+    implementation 'com.github.sadeghpro:jweb:0.4.0'
 }
 ```
 
@@ -49,6 +49,7 @@ Response response = JWeb.connect("https://en.wikipedia.org/wiki/Main_Page")
     .setMethod(Method.GET)// optional default is GET
     .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36")
     //.setBody("username=name&password=pass") // set body
+    .setTimeout(1000)
     .exec();
 System.out.println(response.getStatusCode() + ":" + response.getBody());
 ```

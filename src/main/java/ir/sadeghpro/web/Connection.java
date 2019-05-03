@@ -13,6 +13,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Connection {
 
@@ -20,6 +22,7 @@ public class Connection {
     private Method method = Method.GET;
     private URL url;
     private String body;
+    private int timeout = 0;
 
     public Connection(URL url) {
         this.url = url;
@@ -80,7 +83,49 @@ public class Connection {
         return this;
     }
 
-    public Response exec() throws IOException {
+    public int getTimeout() {
+        return timeout;
+    }
+
+    public Connection setTimeout(int timeout) {
+        this.timeout = timeout;
+        return this;
+    }
+
+    public Response exec() throws IOException, TimeoutException {
+        if (JWeb.getTimeout() == 0 && timeout == 0) {
+            return _exec();
+        } else {
+            AtomicReference<Response> r = new AtomicReference<>();
+            AtomicReference<IOException> ex = new AtomicReference<>();
+            Thread t = new Thread(() -> {
+                try {
+                    Response a= _exec();
+                    System.out.println("----"+a.getStatusCode());
+                    r.set(a);
+                } catch (IOException e) {
+                    ex.set(e);
+                }
+            });
+            t.start();
+            int time = timeout == 0 ? JWeb.getTimeout() : timeout;
+            try {
+                t.join(time);
+                t.stop();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (ex.get() != null){
+                throw ex.get();
+            }
+            if (r.get() == null){
+                throw new TimeoutException();
+            }
+            return r.get();
+        }
+    }
+
+    private Response _exec() throws IOException {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod(method.toString());
 
