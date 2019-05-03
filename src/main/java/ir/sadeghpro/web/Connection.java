@@ -101,7 +101,6 @@ public class Connection {
             Thread t = new Thread(() -> {
                 try {
                     Response a= _exec();
-                    System.out.println("----"+a.getStatusCode());
                     r.set(a);
                 } catch (IOException e) {
                     ex.set(e);
@@ -111,7 +110,6 @@ public class Connection {
             int time = timeout == 0 ? JWeb.getTimeout() : timeout;
             try {
                 t.join(time);
-                t.stop();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -127,6 +125,9 @@ public class Connection {
 
     private Response _exec() throws IOException {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        int time = timeout == 0 ? JWeb.getTimeout() : timeout;
+        con.setConnectTimeout(time);
+        con.setReadTimeout(time);
         con.setRequestMethod(method.toString());
 
         Map<String, String> headers = JWeb.getDefaultHeaders();
