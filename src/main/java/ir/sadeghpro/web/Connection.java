@@ -132,7 +132,9 @@ public class Connection {
 
         Map<String, String> headers = JWeb.getDefaultHeaders();
         headers.putAll(this.headers);
-        headers.forEach(con::setRequestProperty);
+        for(Map.Entry<String, String> entry : headers.entrySet()) {
+            con.setRequestProperty(entry.getKey(),entry.getValue());
+        }
 
         if (body != null && !body.isEmpty()) {
             con.setDoOutput(true);
