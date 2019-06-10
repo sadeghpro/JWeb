@@ -139,7 +139,7 @@ public class Connection {
         if (body != null && !body.isEmpty()) {
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-            wr.write(body.getBytes(StandardCharsets.UTF_8));
+            wr.write(body.getBytes("UTF-8"));
             wr.flush();
             wr.close();
         }
