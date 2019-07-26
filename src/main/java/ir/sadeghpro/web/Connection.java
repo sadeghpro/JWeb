@@ -10,7 +10,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -75,6 +74,11 @@ public class Connection {
 
     public Connection setBody(String body) {
         this.body = body;
+        return this;
+    }
+
+    public <T> Connection setBody(T obj) {
+        this.body = new Gson().toJson(obj);
         return this;
     }
 
