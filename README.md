@@ -20,7 +20,7 @@ Add the dependency:
 <dependency>
     <groupId>com.github.sadeghpro</groupId>
     <artifactId>jweb</artifactId>
-    <version>0.5.0</version>
+    <version>0.6.0</version>
 </dependency>
 ```
 ### Gradle
@@ -36,7 +36,7 @@ allprojects {
 and then in dependencies:
 ```
 dependencies {
-    implementation 'com.github.sadeghpro:jweb:0.5.0'
+    implementation 'com.github.sadeghpro:jweb:0.6.0'
 }
 ```
 

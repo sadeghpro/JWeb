@@ -22,6 +22,7 @@ public class Connection {
     private URL url;
     private String body;
     private int timeout = 0;
+    private JWeb jWeb;
 
     public Connection(URL url) {
         this.url = url;
@@ -96,22 +97,31 @@ public class Connection {
         return this;
     }
 
+    public JWeb getJWeb() {
+        return jWeb;
+    }
+
+    protected Connection setJWeb(JWeb jWeb) {
+        this.jWeb = jWeb;
+        return this;
+    }
+
     public Response exec() throws IOException, TimeoutException {
-        if (JWeb.getTimeout() == 0 && timeout == 0) {
+        if (jWeb.getTimeout() == 0 && timeout == 0) {
             return _exec();
         } else {
             AtomicReference<Response> r = new AtomicReference<>();
             AtomicReference<IOException> ex = new AtomicReference<>();
             Thread t = new Thread(() -> {
                 try {
-                    Response a= _exec();
+                    Response a = _exec();
                     r.set(a);
                 } catch (IOException e) {
                     ex.set(e);
                 }
             });
             t.start();
-            int time = timeout == 0 ? JWeb.getTimeout() : timeout;
+            int time = timeout == 0 ? jWeb.getTimeout() : timeout;
             try {
                 t.join(time);
             } catch (InterruptedException e) {
@@ -129,12 +139,12 @@ public class Connection {
 
     private Response _exec() throws IOException {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        int time = timeout == 0 ? JWeb.getTimeout() : timeout;
+        int time = timeout == 0 ? jWeb.getTimeout() : timeout;
         con.setConnectTimeout(time);
         con.setReadTimeout(time);
         con.setRequestMethod(method.toString());
 
-        Map<String, String> headers = JWeb.getDefaultHeaders();
+        Map<String, String> headers = jWeb.getDefaultHeaders();
         headers.putAll(this.headers);
         for(Map.Entry<String, String> entry : headers.entrySet()) {
             con.setRequestProperty(entry.getKey(),entry.getValue());

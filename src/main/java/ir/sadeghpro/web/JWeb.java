@@ -7,40 +7,40 @@ import java.util.Map;
 
 public class JWeb {
 
-    private static Map<String, String> defaultHeaders = new HashMap<>();
-    private static String defaultUrl = "";
-    private static int timeout = 0;
+    private Map<String, String> defaultHeaders = new HashMap<>();
+    private String defaultUrl = "";
+    private int timeout = 0;
 
 
-    public static Map<String, String> getDefaultHeaders() {
+    public Map<String, String> getDefaultHeaders() {
         return defaultHeaders;
     }
 
-    public static void setDefaultHeaders(Map<String, String> defaultHeaders) {
-        JWeb.defaultHeaders = defaultHeaders;
+    public void setDefaultHeaders(Map<String, String> defaultHeaders) {
+        this.defaultHeaders = defaultHeaders;
     }
 
-    public static String getDefaultUrl() {
+    public String getDefaultUrl() {
         return defaultUrl;
     }
 
-    public static void setDefaultUrl(String defaultUrl) {
-        JWeb.defaultUrl = defaultUrl;
+    public void setDefaultUrl(String defaultUrl) {
+        this.defaultUrl = defaultUrl;
     }
 
-    public static int getTimeout() {
+    public int getTimeout() {
         return timeout;
     }
 
-    public static void setTimeout(int timeout) {
-        JWeb.timeout = timeout;
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
     }
 
-    public static Connection connect(String url) throws MalformedURLException {
-        return new Connection(defaultUrl + url);
+    public Connection connect(String url) throws MalformedURLException {
+        return new Connection(defaultUrl + url).setJWeb(this);
     }
 
-    public static Connection connect(URL url) {
-        return new Connection(url);
+    public Connection connect(URL url) {
+        return new Connection(url).setJsonBody(this);
     }
 }
