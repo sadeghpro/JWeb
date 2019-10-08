@@ -7,9 +7,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
@@ -23,6 +21,7 @@ public class Connection {
     private String body;
     private int timeout = 0;
     private JWeb jWeb;
+    private Proxy proxy;
 
     public Connection(URL url) {
         this.url = url;
@@ -78,14 +77,33 @@ public class Connection {
         return this;
     }
 
-    public <T> Connection setBody(T obj) {
-        this.body = new Gson().toJson(obj);
-        return this;
-    }
-
     public <T> Connection setJsonBody(T object) {
         this.body = new Gson().toJson(object);
         return this;
+    }
+
+    public Connection setFormBody(Map<String, String> form) {
+        StringBuilder body = new StringBuilder();
+        form.forEach((k, v) -> {
+            body.append(k).append("=").append(v).append("&");
+        });
+        this.body = body.toString();
+        this.body = this.body.substring(0, this.body.length() - 1);
+        return this;
+    }
+
+    public Proxy getProxy() {
+        return proxy;
+    }
+
+    public Connection setProxy(Proxy proxy) {
+        this.proxy = proxy;
+        return this;
+    }
+
+    public Connection setProxy(String host, int port) {
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
+        return setProxy(proxy);
     }
 
     public int getTimeout() {
@@ -127,10 +145,10 @@ public class Connection {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (ex.get() != null){
+            if (ex.get() != null) {
                 throw ex.get();
             }
-            if (r.get() == null){
+            if (r.get() == null) {
                 throw new TimeoutException();
             }
             return r.get();
@@ -138,7 +156,19 @@ public class Connection {
     }
 
     private Response _exec() throws IOException {
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        Proxy proxy = null;
+        if (this.proxy != null) {
+            proxy = this.proxy;
+        } else if (jWeb.getDefaultProxy() != null) {
+            proxy = jWeb.getDefaultProxy();
+        }
+
+        HttpURLConnection con;
+        if (proxy == null) {
+            con = (HttpURLConnection) url.openConnection();
+        } else {
+            con = (HttpURLConnection) url.openConnection(proxy);
+        }
         int time = timeout == 0 ? jWeb.getTimeout() : timeout;
         con.setConnectTimeout(time);
         con.setReadTimeout(time);
@@ -146,8 +176,8 @@ public class Connection {
 
         Map<String, String> headers = jWeb.getDefaultHeaders();
         headers.putAll(this.headers);
-        for(Map.Entry<String, String> entry : headers.entrySet()) {
-            con.setRequestProperty(entry.getKey(),entry.getValue());
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            con.setRequestProperty(entry.getKey(), entry.getValue());
         }
 
         if (body != null && !body.isEmpty()) {

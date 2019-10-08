@@ -1,6 +1,7 @@
 package ir.sadeghpro.web;
 
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +10,7 @@ public class JWeb {
 
     private Map<String, String> defaultHeaders = new HashMap<>();
     private String defaultUrl = "";
+    private Proxy defaultProxy;
     private int timeout = 0;
 
 
@@ -34,6 +36,14 @@ public class JWeb {
 
     public void setTimeout(int timeout) {
         this.timeout = timeout;
+    }
+
+    public Proxy getDefaultProxy() {
+        return defaultProxy;
+    }
+
+    public void setDefaultProxy(Proxy defaultProxy) {
+        this.defaultProxy = defaultProxy;
     }
 
     public Connection connect(String url) throws MalformedURLException {
