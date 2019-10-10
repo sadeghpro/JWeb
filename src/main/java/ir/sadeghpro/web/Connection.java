@@ -22,6 +22,7 @@ public class Connection {
     private int timeout = 0;
     private JWeb jWeb;
     private Proxy proxy;
+    private Map<String, String> cookies = new HashMap<>();
 
     public Connection(URL url) {
         this.url = url;
@@ -124,6 +125,25 @@ public class Connection {
         return this;
     }
 
+    public Map<String, String> getCookies() {
+        return cookies;
+    }
+
+    public Connection setCookies(Map<String, String> cookies) {
+        this.cookies = cookies;
+        return this;
+    }
+
+    public Connection addCookie(String key, String value) {
+        cookies.put(key, value);
+        return this;
+    }
+
+    public Connection addAllCookies(Map<String, String> cookies) {
+        this.cookies.putAll(cookies);
+        return this;
+    }
+
     public Response exec() throws IOException, TimeoutException {
         if (jWeb.getTimeout() == 0 && timeout == 0) {
             return _exec();
@@ -176,6 +196,16 @@ public class Connection {
 
         Map<String, String> headers = jWeb.getDefaultHeaders();
         headers.putAll(this.headers);
+        Map<String, String> cookies = jWeb.getCookies();
+        cookies.putAll(this.cookies);
+        if (!cookies.isEmpty()) {
+            StringBuilder cookieBuilder = new StringBuilder();
+            cookies.forEach((k, v) -> {
+                cookieBuilder.append(k).append("=").append(v).append("; ");
+            });
+            String cookie = cookieBuilder.toString().substring(0, cookieBuilder.length() - 2);
+            headers.put("Cookie", cookie);
+        }
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             con.setRequestProperty(entry.getKey(), entry.getValue());
         }
@@ -197,6 +227,9 @@ public class Connection {
         } else {
             stream = con.getInputStream();
         }
+        if (jWeb.isAutoCookie()) {
+            jWeb.addAllCookies(JWeb.parseCookie(con.getHeaderFields()));
+        }
         BufferedReader in = new BufferedReader(new InputStreamReader(stream));
         String inputLine;
         StringBuilder response = new StringBuilder();
@@ -205,6 +238,6 @@ public class Connection {
             response.append(inputLine).append("\n");
         }
         in.close();
-        return new Response(responseCode, response.toString());
+        return new Response(responseCode, response.toString(), con.getHeaderFields());
     }
 }
