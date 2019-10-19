@@ -19,7 +19,9 @@ public class Response {
         this.statusCode = statusCode;
         this.body = body;
         this.headers = headers;
-        cookies.putAll(JWeb.parseCookie(headers));
+        if (headers.get("Set-Cookie") != null) {
+            cookies.putAll(JWeb.parseCookie(headers));
+        }
     }
 
     public int getStatusCode() {
