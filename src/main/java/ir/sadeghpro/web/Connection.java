@@ -85,9 +85,9 @@ public class Connection {
 
     public Connection setFormBody(Map<String, String> form) {
         StringBuilder body = new StringBuilder();
-        form.forEach((k, v) -> {
-            body.append(k).append("=").append(v).append("&");
-        });
+        for (Map.Entry<String, String> entry : form.entrySet()) {
+            body.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+        }
         this.body = body.toString();
         this.body = this.body.substring(0, this.body.length() - 1);
         return this;
@@ -200,9 +200,9 @@ public class Connection {
         cookies.putAll(this.cookies);
         if (!cookies.isEmpty()) {
             StringBuilder cookieBuilder = new StringBuilder();
-            cookies.forEach((k, v) -> {
-                cookieBuilder.append(k).append("=").append(v).append("; ");
-            });
+            for (Map.Entry<String, String> entry : cookies.entrySet()) {
+                cookieBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("; ");
+            }
             String cookie = cookieBuilder.toString().substring(0, cookieBuilder.length() - 2);
             headers.put("Cookie", cookie);
         }

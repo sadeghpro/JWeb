@@ -84,10 +84,10 @@ public class JWeb {
 
     static Map<String, String> parseCookie(Map<String, List<String>> headers) {
         Map<String, String> cookies = new HashMap<>();
-        headers.get("Set-Cookie").forEach(cookie -> {
+        for (String cookie : headers.get("Set-Cookie")) {
             String[] split = cookie.split(";")[0].split("=");
-            cookies.put(split[0] , split[1]);
-        });
+            cookies.put(split[0], split[1]);
+        }
         return cookies;
     }
 }
