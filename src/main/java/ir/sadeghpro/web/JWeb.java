@@ -12,7 +12,7 @@ public class JWeb {
     private Map<String, String> defaultHeaders = new HashMap<>();
     private String defaultUrl = "";
     private Proxy defaultProxy;
-    private Boolean autoCookie;
+    private Boolean autoCookie = false;
     private Map<String, String> cookies = new HashMap<>();
     private int timeout = 0;
 
