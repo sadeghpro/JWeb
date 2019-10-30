@@ -20,7 +20,7 @@ Add the dependency:
 <dependency>
     <groupId>com.github.sadeghpro</groupId>
     <artifactId>jweb</artifactId>
-    <version>0.6.0</version>
+    <version>0.9.0</version>
 </dependency>
 ```
 ### Gradle
@@ -36,7 +36,7 @@ allprojects {
 and then in dependencies:
 ```
 dependencies {
-    implementation 'com.github.sadeghpro:jweb:0.6.0'
+    implementation 'com.github.sadeghpro:jweb:0.9.0'
 }
 ```
 
@@ -45,7 +45,8 @@ dependencies {
 Fetch the [Wikipedia](https://en.wikipedia.org/wiki/Main_Page) homepage:
 
 ```
-Response response = JWeb.connect("https://en.wikipedia.org/wiki/Main_Page")
+JWeb web = new JWeb();
+Response response = web.connect("https://en.wikipedia.org/wiki/Main_Page")
     .setMethod(Method.GET)// optional default is GET
     .addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36")
     //.setBody("username=name&password=pass") // set body
@@ -56,18 +57,20 @@ System.out.println(response.getStatusCode() + ":" + response.getBody());
 
 Set default header and default url:
 ```
+JWeb web = new JWeb();
 Map<String, String> headers = new HashMap<>();
 headers.put("Content-Type", "application/json");
-JWeb.setDefaultHeaders(headers);
-JWeb.setDefaultUrl("https://en.wikipedia.org/wiki"); // only work when use JWeb.connect with string parameter
-JWeb.connect("/Main_Page").exec();
+web.setDefaultHeaders(headers);
+web.setDefaultUrl("https://en.wikipedia.org/wiki"); // only work when use JWeb.connect with string parameter
+web.connect("/Main_Page").exec();
 ```
 
 You can deserialize response body:
 ```
-Response response = JWeb.connect("/products").exec();
+JWeb web = new JWeb();
+Response response = web.connect("/products").exec();
 List<Product> products = r.deserializeJsonArray(Product.class);
-response = JWeb.connect("/products/1").exec();
+response = web.connect("/products/1").exec();
 Product product = r.deserializeJsonObject(Product.class);
 ``` 
 ## Open source

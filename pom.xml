@@ -6,7 +6,7 @@
 
     <groupId>ir.sadeghpro</groupId>
     <artifactId>jweb</artifactId>
-    <version>0.8.3</version>
+    <version>0.9.0</version>
 
     <name>Java Http Connection</name>
     <description>JWeb is a Java library for connecting to Http servers and fetch html or json data.</description>

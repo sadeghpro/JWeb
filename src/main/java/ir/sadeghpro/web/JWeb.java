@@ -16,53 +16,97 @@ public class JWeb {
     private Map<String, String> cookies = new HashMap<>();
     private int timeout = 0;
 
+    public JWeb() {
+
+    }
+
+    public JWeb(String defaultUrl) {
+        this.defaultUrl = defaultUrl;
+    }
+
+    public JWeb(Proxy defaultProxy) {
+        this.defaultProxy = defaultProxy;
+    }
+
+    public JWeb(String defaultUrl, Proxy defaultProxy) {
+        this.defaultUrl = defaultUrl;
+        this.defaultProxy = defaultProxy;
+    }
+
+    public JWeb(int timeout) {
+        this.timeout = timeout;
+    }
+
+    public JWeb(String defaultUrl, Proxy defaultProxy, int timeout) {
+        this.defaultUrl = defaultUrl;
+        this.defaultProxy = defaultProxy;
+        this.timeout = timeout;
+    }
+
+    public JWeb(boolean autoCookie) {
+        this.autoCookie = autoCookie;
+    }
+
+    public JWeb(String defaultUrl, Proxy defaultProxy, Boolean autoCookie, int timeout) {
+        this.defaultUrl = defaultUrl;
+        this.defaultProxy = defaultProxy;
+        this.autoCookie = autoCookie;
+        this.timeout = timeout;
+    }
 
     public Map<String, String> getDefaultHeaders() {
         return defaultHeaders;
     }
 
-    public void setDefaultHeaders(Map<String, String> defaultHeaders) {
+    public JWeb setDefaultHeaders(Map<String, String> defaultHeaders) {
         this.defaultHeaders = defaultHeaders;
+        return this;
     }
 
     public String getDefaultUrl() {
         return defaultUrl;
     }
 
-    public void setDefaultUrl(String defaultUrl) {
+    public JWeb setDefaultUrl(String defaultUrl) {
         this.defaultUrl = defaultUrl;
+        return this;
     }
 
     public int getTimeout() {
         return timeout;
     }
 
-    public void setTimeout(int timeout) {
+    public JWeb setTimeout(int timeout) {
         this.timeout = timeout;
+        return this;
     }
 
     public Proxy getDefaultProxy() {
         return defaultProxy;
     }
 
-    public void setDefaultProxy(Proxy defaultProxy) {
+    public JWeb setDefaultProxy(Proxy defaultProxy) {
         this.defaultProxy = defaultProxy;
+        return this;
     }
 
     public Map<String, String> getCookies() {
         return cookies;
     }
 
-    public void setCookies(Map<String, String> cookies) {
+    public JWeb setCookies(Map<String, String> cookies) {
         this.cookies = cookies;
+        return this;
     }
 
-    public void addCookie(String key, String value) {
+    public JWeb addCookie(String key, String value) {
         cookies.put(key, value);
+        return this;
     }
 
-    public void addAllCookies(Map<String, String> cookies) {
+    public JWeb addAllCookies(Map<String, String> cookies) {
         this.cookies.putAll(cookies);
+        return this;
     }
 
     public Boolean isAutoCookie() {
