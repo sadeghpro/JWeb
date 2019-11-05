@@ -2,11 +2,7 @@ package ir.sadeghpro.web;
 
 import com.google.gson.Gson;
 
-import java.io.InputStream;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -145,14 +141,18 @@ public class Connection {
     }
 
     public Response exec() throws IOException, TimeoutException {
+        return exec("");
+    }
+
+    public Response exec(String downloadPath) throws IOException, TimeoutException {
         if (jWeb.getTimeout() == 0 && timeout == 0) {
-            return _exec();
+            return _exec(downloadPath);
         } else {
             AtomicReference<Response> r = new AtomicReference<>();
             AtomicReference<IOException> ex = new AtomicReference<>();
             Thread t = new Thread(() -> {
                 try {
-                    Response a = _exec();
+                    Response a = _exec(downloadPath);
                     r.set(a);
                 } catch (IOException e) {
                     ex.set(e);
@@ -175,7 +175,7 @@ public class Connection {
         }
     }
 
-    private Response _exec() throws IOException {
+    private Response _exec(String downloadPath) throws IOException {
         Proxy proxy = null;
         if (this.proxy != null) {
             proxy = this.proxy;
@@ -230,14 +230,30 @@ public class Connection {
         if (jWeb.isAutoCookie()) {
             jWeb.addAllCookies(JWeb.parseCookie(con.getHeaderFields()));
         }
-        BufferedReader in = new BufferedReader(new InputStreamReader(stream));
-        String inputLine;
-        StringBuilder response = new StringBuilder();
+        if (!downloadPath.isEmpty()) {
 
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine).append("\n");
+            FileOutputStream outputStream = new FileOutputStream(downloadPath);
+
+            int bytesRead = -1;
+            byte[] buffer = new byte[4096];
+            while ((bytesRead = stream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            outputStream.close();
+            stream.close();
+            return new Response(responseCode, "", con.getHeaderFields());
+        } else {
+            BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine).append("\n");
+            }
+            in.close();
+            stream.close();
+            return new Response(responseCode, response.toString(), con.getHeaderFields());
         }
-        in.close();
-        return new Response(responseCode, response.toString(), con.getHeaderFields());
     }
 }
