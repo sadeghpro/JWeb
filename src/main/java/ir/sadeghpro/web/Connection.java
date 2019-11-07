@@ -140,19 +140,28 @@ public class Connection {
         return this;
     }
 
-    public Response exec() throws IOException, TimeoutException {
-        return exec("");
+
+    public Response download(String downloadPath) throws IOException {
+        return _exec(downloadPath, null);
     }
 
-    public Response exec(String downloadPath) throws IOException, TimeoutException {
+    public Response upload(String fileName, InputStream stream) throws IOException {
+        return _exec(fileName, stream);
+    }
+
+    public Response upload(String fileName, String filePath) throws IOException {
+        return _exec(fileName, new FileInputStream(filePath));
+    }
+
+    public Response exec() throws IOException, TimeoutException {
         if (jWeb.getTimeout() == 0 && timeout == 0) {
-            return _exec(downloadPath);
+            return _exec("", null);
         } else {
             AtomicReference<Response> r = new AtomicReference<>();
             AtomicReference<IOException> ex = new AtomicReference<>();
             Thread t = new Thread(() -> {
                 try {
-                    Response a = _exec(downloadPath);
+                    Response a = _exec("", null);
                     r.set(a);
                 } catch (IOException e) {
                     ex.set(e);
@@ -175,7 +184,7 @@ public class Connection {
         }
     }
 
-    private Response _exec(String downloadPath) throws IOException {
+    private Response _exec(String path, InputStream uploadStream) throws IOException {
         Proxy proxy = null;
         if (this.proxy != null) {
             proxy = this.proxy;
@@ -210,11 +219,32 @@ public class Connection {
             con.setRequestProperty(entry.getKey(), entry.getValue());
         }
 
-        if (body != null && !body.isEmpty()) {
+        if (body != null && !body.isEmpty() && uploadStream == null) {
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
             wr.write(body.getBytes("UTF-8"));
             wr.flush();
+            wr.close();
+        } else if (uploadStream != null) {
+            String boundary = "*****";
+            String crlf = "\r\n";
+            String twoHyphens = "--";
+            con.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            BufferedInputStream bis = new BufferedInputStream(uploadStream);
+            wr.writeBytes(twoHyphens + boundary + crlf);
+            wr.writeBytes("Content-Disposition: form-data; name=\"" +
+                    path + "\";filename=\"" +
+                    path + "\"" + crlf);
+            wr.writeBytes(crlf);
+            int i;
+            while ((i = bis.read()) != 0) {
+                wr.write(i);
+            }
+            wr.writeBytes(crlf);
+            wr.writeBytes(twoHyphens + boundary + twoHyphens + crlf);
+            bis.close();
             wr.close();
         }
 
@@ -230,9 +260,8 @@ public class Connection {
         if (jWeb.isAutoCookie()) {
             jWeb.addAllCookies(JWeb.parseCookie(con.getHeaderFields()));
         }
-        if (!downloadPath.isEmpty()) {
-
-            FileOutputStream outputStream = new FileOutputStream(downloadPath);
+        if (uploadStream == null && !path.isEmpty()) {
+            FileOutputStream outputStream = new FileOutputStream(path);
 
             int bytesRead = -1;
             byte[] buffer = new byte[4096];
