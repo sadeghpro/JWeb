@@ -239,7 +239,7 @@ public class Connection {
                     path + "\"" + crlf);
             wr.writeBytes(crlf);
             int i;
-            while ((i = bis.read()) != 0) {
+            while ((i = bis.read()) != -1) {
                 wr.write(i);
             }
             wr.writeBytes(crlf);
