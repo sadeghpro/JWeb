@@ -257,7 +257,7 @@ public class Connection {
         } else {
             stream = con.getInputStream();
         }
-        if (jWeb.isAutoCookie()) {
+        if (jWeb.isAutoCookie() && con.getHeaderFields() != null) {
             jWeb.addAllCookies(JWeb.parseCookie(con.getHeaderFields()));
         }
         if (uploadStream == null && !path.isEmpty()) {
