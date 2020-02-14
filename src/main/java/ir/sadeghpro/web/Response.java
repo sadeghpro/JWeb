@@ -3,6 +3,10 @@ package ir.sadeghpro.web;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -11,11 +15,11 @@ import java.util.Map;
 public class Response {
 
     private int statusCode;
-    private String body;
+    private InputStream body;
     private Map<String, List<String>> headers;
     private Map<String, String> cookies = new HashMap<>();
 
-    public Response(int statusCode, String body, Map<String, List<String>> headers) {
+    public Response(int statusCode, InputStream body, Map<String, List<String>> headers) {
         this.statusCode = statusCode;
         this.body = body;
         this.headers = headers;
@@ -33,10 +37,25 @@ public class Response {
     }
 
     public String getBody() {
+        BufferedReader in = new BufferedReader(new InputStreamReader(body));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        try {
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine).append("\n");
+            }
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return response.toString();
+    }
+
+    public InputStream getBodyInputStream() {
         return body;
     }
 
-    public void setBody(String body) {
+    public void setBody(InputStream body) {
         this.body = body;
     }
 
@@ -57,11 +76,11 @@ public class Response {
     }
 
     public <T> T deserializeJsonObject(Class<T> type) {
-        return new Gson().fromJson(body, type);
+        return new Gson().fromJson(getBody(), type);
     }
 
     public <T> List<T> deserializeJsonArray(Class<T> type) {
         Type arrayType = TypeToken.getParameterized(List.class, type).getType();
-        return new Gson().fromJson(body, arrayType);
+        return new Gson().fromJson(getBody(), arrayType);
     }
 }

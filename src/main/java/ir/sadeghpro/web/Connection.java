@@ -271,18 +271,10 @@ public class Connection {
 
             outputStream.close();
             stream.close();
-            return new Response(responseCode, "", con.getHeaderFields());
+            return new Response(responseCode, null, con.getHeaderFields());
         } else {
-            BufferedReader in = new BufferedReader(new InputStreamReader(stream));
-            String inputLine;
-            StringBuilder response = new StringBuilder();
 
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine).append("\n");
-            }
-            in.close();
-            stream.close();
-            return new Response(responseCode, response.toString(), con.getHeaderFields());
+            return new Response(responseCode, stream, con.getHeaderFields());
         }
     }
 }
