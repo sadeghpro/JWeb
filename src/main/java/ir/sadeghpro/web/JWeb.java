@@ -128,9 +128,11 @@ public class JWeb {
 
     static Map<String, String> parseCookie(Map<String, List<String>> headers) {
         Map<String, String> cookies = new HashMap<>();
-        for (String cookie : headers.get("Set-Cookie")) {
-            String[] split = cookie.split(";")[0].split("=");
-            cookies.put(split[0], split[1]);
+        if (headers.get("Set-Cookie") != null) {
+            for (String cookie : headers.get("Set-Cookie")) {
+                String[] split = cookie.split(";")[0].split("=");
+                cookies.put(split[0], split[1]);
+            }
         }
         return cookies;
     }
