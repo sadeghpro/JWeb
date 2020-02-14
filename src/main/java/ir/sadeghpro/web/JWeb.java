@@ -130,8 +130,9 @@ public class JWeb {
         Map<String, String> cookies = new HashMap<>();
         if (headers.get("Set-Cookie") != null) {
             for (String cookie : headers.get("Set-Cookie")) {
-                String[] split = cookie.split(";")[0].split("=");
-                cookies.put(split[0], split[1]);
+                String split = cookie.split(";")[0];
+                int index = split.indexOf("=");
+                cookies.put(split.substring(0, index), split.substring(index + 1));
             }
         }
         return cookies;
