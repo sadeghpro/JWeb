@@ -37,10 +37,10 @@ public class Response {
     }
 
     public String getBody() {
-        BufferedReader in = new BufferedReader(new InputStreamReader(body));
-        String inputLine;
         StringBuilder response = new StringBuilder();
         try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(body, "UTF-8"));
+            String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine).append("\n");
             }
